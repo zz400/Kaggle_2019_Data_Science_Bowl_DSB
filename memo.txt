@@ -1,0 +1,70 @@
+Memo
+
+Feeling: "Kids are some other creatures that I can't understand."
+- easy game (for me), low points (kids got)
+- play a simple game again and again and again.
+They are human users, but not 'normal' (or predictible) human users.
+
+web-version of the PBS KIDS APP (where you can play the games as a kid): https://measureup.pbskids.org
+
+
+preprocessing for train:
+1. remove users that never take an Assessment.
+2. If a user take the Assessment w/o playing with any game, remove the Assessment (e.g. installation_id_00129856).
+Assessment should be taken after the kids playing some games. otherwise the data can't be used as training data.
+
+3. after step 2, remove users without an Assessment.
+
+4. 
+
+
+
+Features:
+- when was the most recent time to play a game
+- Remember to remove all na feature combinations
+- 0. 每个 assessment 建一个model
+  1. 一个user只作为一个sample, 还是作为多个sample,
+  2. 是否把test当中的sample 用在train里？
+  3. y 的范围是[0:3] 还是miss number
+  4. feature 里加不加 attempts_num, 两种做ensamble
+  5. 更少的feature 会不会效果更好 （如天平assessment）
+  6. 画 feature filling
+  7. time weighted vs last
+
+Adv model: user percentile
+
+
+思路
+there're three world:
+'NONE' (the app's start screen): No Assessment
+TREETOPCITY' (Length/Height), contains 18 sections, including 2 Assessments: Mushroom Sorter and Bird Measurer
+'MAGMAPEAK' (Capacity/Displacement), contains 11 sections, including 1 Assessment: Cauldron Filler
+'CRYSTALCAVES' (Weight), contains 15 sections, including 2 Assessments: Cart Balancer and Mushroom Sorter
+
+* Assessment attempts are captured in event_code 4100 for all assessments except for Bird Measurer, which uses event_code 4110. If the attempt was correct, it contains "correct":true.
+
+
+
+Start with 'MAGMAPEAK' because it contains the least sections and only one Assessment.
+
+Magma Peak - Level 1,Clip,20
+Sandcastle Builder (Activity),Activity,  # 往不同大小的容器里装沙子,装满为止  # play time
+Slop Problem,Clip,60   
+Scrub-A-Dub,Game,   # 给不同size的动物配size合适的木桶和香皂洗澡   # 是否跳过instruction clip，选对和选错的次数
+Watering Hole (Activity),Activity,  # 恐龙要喝水，画云降雨 # play time
+Magma Peak - Level 2,Clip,22
+Dino Drink,Game,  # 有size不同的恐龙，用合适size的杯子从瀑布接水给恐龙喝  # 是否跳过instruction clip，选对和选错的次数
+Bubble Bath,Game,  # 用不同容器往洗澡盆里到水，问需要倒几次水  # 选的容器不同，难度可能不同
+Bottle Filler (Activity),Activity,  # 把水从一个烧杯倒入另一个烧杯，size不同
+Dino Dive,Game,  # 不同size的恐龙跳水，选合适size的恐龙使得水升到预定水位 # 从易到难
+Cauldron Filler (Assessment),Assessment,  # 两个任务： 1. 根据size配对水杯和雕像 2. 选出最大/最小的水杯 （都要答对吗）
+
+
+
+两种思路：
+纵向：只看这一个World
+横线：看这个kid在其他World中的表现  # 查看 同一个user在不同World中的表现是否有相关性
+
+
+corner case:
+上来就做assessment
